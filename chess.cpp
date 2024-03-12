@@ -76,6 +76,7 @@ char horsePiece(double x, double y){
         cin >> x;
         cin >> y;
         //rechecks conditions
+        //another way i could do this is to do x + (y*8) and then check if it's mathematically possible for the piece to move there
         if ((x+1)||(x-1)){
             if ((y+2)||(y-2)){
                 valid == true;
