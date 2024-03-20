@@ -1,4 +1,5 @@
 /*
+Currently working on: attaching multiple files to one another I am having problems with using namespace std not being on all of the files included in chess.h and will be looking for ways to fix it.
 Splitting up code: 
 chess.cpp, has main function which:
 -has cout at beginning explaining what letters are which pieces
