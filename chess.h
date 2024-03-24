@@ -1,7 +1,10 @@
+#ifndef CHESS_H
+
+#define CHESS_H
+
 #include <iostream>
-#include "chessInput.cpp"
-#include "chess.cpp"
 
 using namespace std;
 
-int main();
+#endif
+
