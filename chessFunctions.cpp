@@ -104,10 +104,11 @@ int userMoveColumn(string userMove, bool& validMove){
     return columnNumber;
 }
 
-int getUserInputAndConvert(){
+int getUserInputAndConvert(bool turn, char board[], bool initialInput){
     bool validMove;
     string userMove; 
     int userColumn, userRow, squareMoved;
+    //turn = white !turn = black
 
     do{
         validMove = true; //resets validMove value if previously false
@@ -118,16 +119,37 @@ int getUserInputAndConvert(){
         if (userRow >= 8){
             validMove = false;
         }
+
+        for (int i = 0; i < 64; ++i){
+            if ((userColumn + (userRow* 8)) == i){
+                squareMoved = i;
+            }
+        }
+
+        /*
+        This is just to make sure the piece they're moving is their own
+        It isn't applicable to the space they're moving it to so initialInput
+        keeps track of whether or not it's the first time this function is used
+        or second for the current turn. 
+        */
+        if (!initialInput){
+            //If white it'll be a capital letter (lower ASCII value)
+            if (turn){
+                if (board[squareMoved] > 'Z'){
+                    validMove = false;
+                }
+            } else {
+                if (board[squareMoved] < 'a'){
+                    validMove = false;
+                }
+            }
+        }
+
         if (!validMove){
             cout << "That move was invalid please enter it again." << endl 
             << "Remember to use capital letters and a number under 9." << endl;
         }
     } while (!validMove);
- 
-    for (int i = 0; i < 64; ++i){
-        if ((userColumn + (userRow* 8)) == i){
-           squareMoved = i;
-        }
-    }
+
     return squareMoved;
 }

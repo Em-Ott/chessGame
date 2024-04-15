@@ -17,7 +17,7 @@ int main(){
     char board[64], pieceMoved;
     int gameStart = 0, initialPlacement = 0, endPlacement = 0;
     string userMove;
-    bool validMove = true, gameOngoing = true, turn = true;
+    bool validMove = true, gameOngoing = true, turn = true, gotInitial = false;
     //variable turn true = white, false = black for which color's turn it is.
 
     cout << "The pieces are abbreviated as the following: " << endl << "Pawn: p" << endl << 
@@ -32,6 +32,8 @@ int main(){
         do {
             //board creation
             boardCreation(board);
+            gotInitial = false;
+
             if (turn){
                 cout << "White's turn." << endl;
             } else {
@@ -41,11 +43,12 @@ int main(){
             cout << "Enter the location of the piece you want to move." << endl;
             cout << "For example, A2 would move the pawn in the first column, second row." << endl;
 
-            initialPlacement = getUserInputAndConvert();
+            initialPlacement = getUserInputAndConvert(turn, board, gotInitial);
+            gotInitial = true; 
             pieceMoved = board[initialPlacement];
             cout << "Where would you like to move this piece to?" << endl;
             cout << "Enter as A2, E6, F8, etc." << endl;
-            endPlacement = getUserInputAndConvert();
+            endPlacement = getUserInputAndConvert(turn, board, gotInitial);
             
             
             board[endPlacement] = pieceMoved;
@@ -53,7 +56,7 @@ int main(){
 
             /*
             After receiving end and initial placement check if possible
-            based on piece. Check for checkmate function. 
+            based on piece. Check for checkmate function, add take pieces function. 
             And in getUserInputAndConvert do not allow them to move the other
             pieces places. Turn will likely become a parameter.
             */
