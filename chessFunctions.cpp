@@ -59,43 +59,75 @@ void boardCreation(char board[]){
     }
 }
 
-int userMoveColumn(string userMove){
+int userMoveColumn(string userMove, bool& validMove){
     char column;
     int columnNumber;
     column = userMove[0];
-    
+
     switch (column){
         case 'A':
-        columnNumber = 1;
-        break;
+            columnNumber = 0;
+            break;
 
         case 'B':
-        columnNumber = 2;
-        break;
+            columnNumber = 1;
+            break;
 
         case 'C':
-        columnNumber = 3;
-        break;
+            columnNumber = 2;
+            break;
 
         case 'D':
-        columnNumber = 4;
-        break;
+            columnNumber = 3;
+            break;
 
         case 'E':
-        columnNumber = 5;
-        break;
+            columnNumber = 4;
+            break;
 
         case 'F':
-        columnNumber = 6;
-        break;
+            columnNumber = 5;
+            break;
 
         case 'G':
-        columnNumber = 7;
-        break;
+            columnNumber = 6;
+            break;
 
         case 'H':
-        columnNumber = 2;
-        break;
-    }
+            columnNumber = 7;
+            break;
+
+        default:
+            validMove = false;
+            break;
+        } 
     return columnNumber;
+}
+
+int getUserInputAndConvert(){
+    bool validMove;
+    string userMove; 
+    int userColumn, userRow, squareMoved;
+
+    do{
+        validMove = true; //resets validMove value if previously false
+        cin >> userMove;
+        userColumn = userMoveColumn(userMove, validMove);
+        //the -48 accounts for userRow taking userMove[1] as its ASCII value. ASCII 49 = 1.
+        userRow = userMove[1] - 49;
+        if (userRow >= 8){
+            validMove = false;
+        }
+        if (!validMove){
+            cout << "That move was invalid please enter it again." << endl 
+            << "Remember to use capital letters and a number under 9." << endl;
+        }
+    } while (!validMove);
+ 
+    for (int i = 0; i < 64; ++i){
+        if ((userColumn + (userRow* 8)) == i){
+           squareMoved = i;
+        }
+    }
+    return squareMoved;
 }

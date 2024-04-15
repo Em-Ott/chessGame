@@ -9,7 +9,8 @@ using namespace std;
 
 void boardInitalization (char board[]);
 void boardCreation(char board[]);
-int userMoveColumn(string userMove);
+int userMoveColumn(string userMove, bool& validMove);
+int getUserInputAndConvert();
 
 #endif
 

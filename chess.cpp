@@ -15,8 +15,10 @@ Check for invalid input
 
 int main(){
     char board[64], pieceMoved;
-    int gameStart, userRow, userColumn, pieceMovedSquare;
+    int gameStart = 0, initialPlacement = 0, endPlacement = 0;
     string userMove;
+    bool validMove = true, gameOngoing = true, turn = true;
+    //variable turn true = white, false = black for which color's turn it is.
 
     cout << "The pieces are abbreviated as the following: " << endl << "Pawn: p" << endl << 
     "Rook: r" << endl << "Horse: h" << endl << "Bishop: b" << endl << "Queen: q" << endl <<
@@ -25,25 +27,45 @@ int main(){
     cin >> gameStart;
 
     while (gameStart == 1){
-        //board initalization 
+        //board initalization, this is the loop for replayability 
         boardInitalization (board);
-        //board creation
-        boardCreation(board);
-        cout << "White moves first. Enter the location of the piece you want to move." << endl;
-        cout << "For example, A2 would move the pawn in the first column, second row." << endl;
-        cin >> userMove;
-        userColumn = userMoveColumn(userMove);
-        //the -48 accounts for userRow taking userMove[1] as its ASCII value. ASCII 49 = 1.
-        userRow = userMove[1] - 48;
-        for (int i = 0; i < 64; ++i){
-            if (((userColumn * 8) + userRow) == i){
-                pieceMovedSquare = i;
+        do {
+            //board creation
+            boardCreation(board);
+            if (turn){
+                cout << "White's turn." << endl;
+            } else {
+                cout << "Black's turn." << endl; 
             }
-        }
-        pieceMoved = board[pieceMovedSquare];
-        cout << "Where would you like to move this piece to?" << endl;
-        cout << "Enter as A2, E6, F8, etc." << endl;
-        cout << pieceMoved;
+
+            cout << "Enter the location of the piece you want to move." << endl;
+            cout << "For example, A2 would move the pawn in the first column, second row." << endl;
+
+            initialPlacement = getUserInputAndConvert();
+            pieceMoved = board[initialPlacement];
+            cout << "Where would you like to move this piece to?" << endl;
+            cout << "Enter as A2, E6, F8, etc." << endl;
+            endPlacement = getUserInputAndConvert();
+            
+            
+            board[endPlacement] = pieceMoved;
+            board[initialPlacement] = '_';
+
+            /*
+            After receiving end and initial placement check if possible
+            based on piece. Check for checkmate function. 
+            And in getUserInputAndConvert do not allow them to move the other
+            pieces places. Turn will likely become a parameter.
+            */
+
+
+            if (turn){
+                turn = false;
+            } else {
+                turn = true;
+            }
+            
+        } while (gameOngoing);
     } 
 
 
