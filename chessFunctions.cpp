@@ -153,3 +153,165 @@ int getUserInputAndConvert(bool turn, char board[], bool initialInput){
 
     return squareMoved;
 }
+
+bool checkIfPossible(int startingPosition, int endingPosition, char piece, char board[]){
+    bool validMove = true;
+
+    switch (piece){
+        case 'P':
+            validMove = whitePieceMoveOnWhitePiece(endingPosition, board);
+            //pawns don't have a seperate function since they can only move forward so the ifs are different
+            
+            if ((startingPosition - 8 == endingPosition) && (board[endingPosition] == '_')){
+                //these do nothing so if validMove was made false by the previous function call above it will remain false
+            } else if ((startingPosition - 16 == endingPosition) && (startingPosition >= 48) 
+            && (board[endingPosition] == '_')){
+                //if in starting spot can move 2 forward
+            } else if (((startingPosition - 7 == endingPosition) || (startingPosition - 9 == endingPosition)) 
+            && ((board[endingPosition] <= 'z') && (board[endingPosition] != '_'))){
+               //allows for taking of other pieces using the ASCII value of lowercase (less than uppercase) 
+               //and excluding '_' (ASCII value 95)
+            } else {
+                validMove = false;
+            }
+        break;
+
+        case 'p':
+            validMove = blackPieceMoveOnBlackPiece(endingPosition, board);
+
+            if ((startingPosition + 8 == endingPosition) && (board[endingPosition] == '_')){
+                
+            } else if ((startingPosition + 16 == endingPosition) && (startingPosition < 16) 
+            && (board[endingPosition] == '_')){
+            
+            } else if (((startingPosition + 7 == endingPosition) || (startingPosition + 9 == endingPosition)) 
+            && (board[endingPosition] > 'z')){
+               //allows for taking of other pieces using the ASCII value of lowercase (less than uppercase) 
+            } else {
+                validMove = false;
+            }
+            
+        break;
+
+        case 'R':
+        validMove = whitePieceMoveOnWhitePiece(endingPosition, board);
+        //using validMove as a variable allows it to remain false if it already is false
+        validMove = horizontalAndVerticalMoveCheck(startingPosition, endingPosition, board, validMove);
+        break;
+
+        case 'r':
+        validMove = blackPieceMoveOnBlackPiece(endingPosition, board);
+        validMove = horizontalAndVerticalMoveCheck(startingPosition, endingPosition, board, validMove);
+        break;
+
+        case 'H':
+
+
+        case 'h':
+
+        break;
+        case 'B':
+        case 'b':
+
+        break;
+        case 'Q':
+        case 'q':
+
+        break;
+        case 'K':
+        case 'k':
+
+        break;
+    } 
+
+
+    return validMove;
+}
+
+bool blackPieceMoveOnBlackPiece(int endingPosition, char board[]){
+    bool validMove = true;
+    //black pieces are all lowercase
+    if((board[endingPosition] < 'z') && board[endingPosition] != '_'){
+        validMove = false;
+    }
+
+    return validMove;
+}
+
+bool whitePieceMoveOnWhitePiece(int endingPosition, char board[]){
+    bool validMove = true;
+    //white pieces are uppercase (ASCII values higher than z)
+    if(board[endingPosition] > 'z'){
+        validMove = false;
+    }
+
+    return validMove;
+}
+
+bool horizontalAndVerticalMoveCheck(int startingPosition, int endingPosition, char board[], bool validMove){
+    int distanceMoved = 0;
+    distanceMoved = abs(startingPosition - endingPosition);
+
+    if (distanceMoved == 0){
+        validMove = false;
+    }
+    if ((startingPosition/8) == (endingPosition/8)){
+        //checks if they are in the same row, integer division rounds down so 0/8 and 7/8 are both 0
+        /*
+        next every spot on the way to their ending position needs to be checked since a piece 
+        can't fly over other pieces
+        */
+        if (startingPosition < endingPosition){
+            for (int i = 1; i <= distanceMoved; ++i){
+              if (board[startingPosition + i] == '_'){
+                if (distanceMoved == i){
+                  return validMove;
+                }
+              } else {
+                 validMove = false;
+                }
+            }
+        } else if (endingPosition < startingPosition){
+              for (int i = 1; i <= distanceMoved; ++i){
+                if (board[startingPosition - i] == '_'){
+                  if (distanceMoved == i){
+                    return validMove;
+                   }
+                } else {
+                    validMove = false;
+                 }
+            }
+       }
+    } else if (distanceMoved%8 == 0){
+        //vertical movement
+        if (startingPosition < endingPosition){
+            for(int i = 1; i*8 <= distanceMoved; ++i){
+              if(board[startingPosition + (i*8)] == '_'){
+                    if (distanceMoved == i*8){
+                        return validMove;
+                    }
+                } else {
+                    validMove = false;
+                }
+            }
+        } else if (endingPosition < startingPosition){
+            for(int i = 1; i*8 <= distanceMoved; ++i){
+              if(board[startingPosition - (i*8)] == '_'){
+                    if (distanceMoved == i*8){
+                        return validMove;
+                    }
+                } else {
+                    validMove = false;
+                }
+            }
+        }
+    } else {
+        validMove = false;
+    }
+    return validMove;
+}
+
+bool verticalMoveCheck(int startingPosition, int endingPosition, char board[], bool validMove){
+    int distanceMoved = 0;
+    distanceMoved = abs(startingPosition - endingPosition);
+}

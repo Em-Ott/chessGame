@@ -7,13 +7,14 @@ When using .at(#) or [#] on a string and I am expecting an integer (int var = st
 it will return the ASCII value of that integer (interesting)
 
 */
-/*
-To do, after basics:
-Check for invalid input
 
-*/
 
 int main(){
+    /*
+    could also do a multidimensional array [8][8]
+    it would mainly just change the way the board is created (double loop)
+    and in checking if valid would check row and column
+    */
     char board[64], pieceMoved;
     int gameStart = 0, initialPlacement = 0, endPlacement = 0;
     string userMove;
@@ -21,7 +22,7 @@ int main(){
     //variable turn true = white, false = black for which color's turn it is.
 
     cout << "The pieces are abbreviated as the following: " << endl << "Pawn: p" << endl << 
-    "Rook: r" << endl << "Horse: h" << endl << "Bishop: b" << endl << "Queen: q" << endl <<
+    "Rook: r" << endl << "Knight/Horse: h" << endl << "Bishop: b" << endl << "Queen: q" << endl <<
     "King: k" << endl << "The white pieces are capital letters and the black pieces are lower case." << endl;
     cout << "To begin type 1." << endl;
     cin >> gameStart;
@@ -58,9 +59,12 @@ int main(){
             After receiving end and initial placement check if possible
             based on piece. Check for checkmate function, add take pieces function. 
             And in getUserInputAndConvert do not allow them to move the other
-            pieces places. Turn will likely become a parameter.
+            pieces places. Add promotion system. Make it so
+            you can't take your own piece.
             */
-
+           //do {
+                //validMove = checkIfPossible(initialPlacement, endPlacement, pieceMoved, board);
+           //} while (!validMove);
 
             if (turn){
                 turn = false;
