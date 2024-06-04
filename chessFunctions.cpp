@@ -1,5 +1,14 @@
 #include "chess.h"
 
+/*
+Queen, Bishop, and Rook are all working as intended
+So far horse seems good, hasn't been tested fully yet.
+Current problems:
+I can move blank spaces.D
+black pawn can't take?
+implement a feature which stops a king from moving into check
+*/
+
 void boardInitalization (char board[]){
     for (int i = 0; i < 64; ++i){
         board[i] = '_';
@@ -205,21 +214,56 @@ bool checkIfPossible(int startingPosition, int endingPosition, char piece, char 
         break;
 
         case 'H':
+        validMove = whitePieceMoveOnWhitePiece(endingPosition, board);
+        validMove = horseMoveCheck(startingPosition, endingPosition, board, validMove);
 
-
+        break;
         case 'h':
+        validMove = blackPieceMoveOnBlackPiece(endingPosition, board);
+        validMove = horseMoveCheck(startingPosition, endingPosition, board, validMove);
 
         break;
         case 'B':
+        validMove = whitePieceMoveOnWhitePiece(endingPosition, board);
+        validMove = diagonalMoveCheck(startingPosition, endingPosition, board, validMove);
+
+        break;
         case 'b':
+        validMove = blackPieceMoveOnBlackPiece(endingPosition, board);
+        validMove = diagonalMoveCheck(startingPosition, endingPosition, board, validMove);
 
         break;
         case 'Q':
+        validMove = whitePieceMoveOnWhitePiece(endingPosition, board);
+        if ((horizontalAndVerticalMoveCheck(startingPosition, endingPosition, board, validMove)) == 
+        (diagonalMoveCheck(startingPosition, endingPosition, board, validMove))){
+            validMove = false;
+        }
+
+        break;
         case 'q':
+        validMove = blackPieceMoveOnBlackPiece(endingPosition, board);
+        /*
+        if horizontal is false and diagonal is true then the queen is moving diagonally therefore the move
+        is diagonal, and vice versa meaning the move would be valid.
+        they can't both return true but they can both return false meaning the queen is neither moving
+        diagonally or horizontally or vertically, meaning the move is illegal if they both return false
+        and thus, if they return the same value
+        */
+        if ((horizontalAndVerticalMoveCheck(startingPosition, endingPosition, board, validMove)) == 
+        (diagonalMoveCheck(startingPosition, endingPosition, board, validMove))){
+            validMove = false;
+        }
 
         break;
         case 'K':
+        validMove = whitePieceMoveOnWhitePiece(endingPosition, board);
+        validMove = kingMoveCheck(startingPosition, endingPosition, board, validMove);
+
+        break; 
         case 'k':
+        validMove = blackPieceMoveOnBlackPiece(endingPosition, board);
+        validMove = kingMoveCheck(startingPosition, endingPosition, board, validMove);
 
         break;
     } 
@@ -255,6 +299,8 @@ bool horizontalAndVerticalMoveCheck(int startingPosition, int endingPosition, ch
     if (distanceMoved == 0){
         validMove = false;
     }
+
+    //horizontal 
     if ((startingPosition/8) == (endingPosition/8)){
         //checks if they are in the same row, integer division rounds down so 0/8 and 7/8 are both 0
         /*
@@ -262,22 +308,24 @@ bool horizontalAndVerticalMoveCheck(int startingPosition, int endingPosition, ch
         can't fly over other pieces
         */
         if (startingPosition < endingPosition){
-            for (int i = 1; i <= distanceMoved; ++i){
+            for (int i = 1; i < distanceMoved; ++i){
               if (board[startingPosition + i] == '_'){
+                //space clear, can continue checking
+              } else {
                 if (distanceMoved == i){
                   return validMove;
                 }
-              } else {
                  validMove = false;
                 }
             }
         } else if (endingPosition < startingPosition){
-              for (int i = 1; i <= distanceMoved; ++i){
+              for (int i = 1; i < distanceMoved; ++i){
                 if (board[startingPosition - i] == '_'){
-                  if (distanceMoved == i){
-                    return validMove;
-                   }
+                  //space is clear can continue checking
                 } else {
+                    if (distanceMoved == i){
+                        return validMove;
+                   }
                     validMove = false;
                  }
             }
@@ -285,22 +333,24 @@ bool horizontalAndVerticalMoveCheck(int startingPosition, int endingPosition, ch
     } else if (distanceMoved%8 == 0){
         //vertical movement
         if (startingPosition < endingPosition){
-            for(int i = 1; i*8 <= distanceMoved; ++i){
+            for(int i = 1; i*8 < distanceMoved; ++i){
               if(board[startingPosition + (i*8)] == '_'){
+                    //space is clear can continue checking
+                } else {
                     if (distanceMoved == i*8){
                         return validMove;
                     }
-                } else {
                     validMove = false;
                 }
             }
         } else if (endingPosition < startingPosition){
-            for(int i = 1; i*8 <= distanceMoved; ++i){
+            for(int i = 1; i*8 < distanceMoved; ++i){
               if(board[startingPosition - (i*8)] == '_'){
+                    //space is clear, can continue checking
+                } else {
                     if (distanceMoved == i*8){
                         return validMove;
                     }
-                } else {
                     validMove = false;
                 }
             }
@@ -311,7 +361,74 @@ bool horizontalAndVerticalMoveCheck(int startingPosition, int endingPosition, ch
     return validMove;
 }
 
-bool verticalMoveCheck(int startingPosition, int endingPosition, char board[], bool validMove){
-    int distanceMoved = 0;
+bool diagonalMoveCheck(int startingPosition, int endingPosition, char board[], bool validMove){
+    //check for multiples of 9s and 7s
+    int distanceMoved = 0, nineMovement = 0, sevenMovement = 0;
     distanceMoved = abs(startingPosition - endingPosition);
+
+    if (distanceMoved == 0){
+        validMove = false;
+    }
+
+    if(startingPosition > endingPosition){
+        sevenMovement = -7;
+        nineMovement = -9;
+    } else {
+        sevenMovement = 7;
+        nineMovement = 9;
+    }
+
+    if (distanceMoved%7 == 0){
+        for(int i = 1; i*7 < distanceMoved; ++i){
+            if (board[startingPosition + i * sevenMovement] == '_'){
+                //space is clear loop continues
+            } else {
+                if (distanceMoved == i * sevenMovement){
+                    return validMove;
+                }
+                validMove = false;
+            }     
+        }
+    } else if (distanceMoved%9 == 0) {
+        cout << "divide by 9" << endl;
+        for(int i = 1; i*9 < distanceMoved; ++i){
+            if (board[startingPosition + i * nineMovement] == '_'){
+                //space is blank can continue checking
+            } else {
+                if (distanceMoved == i * nineMovement){
+                    return validMove;
+                }
+                validMove = false;
+            }     
+        }
+    } else {
+        validMove = false;
+    }
+    
+    return validMove;
+}
+
+bool horseMoveCheck(int startingPosition, int endingPosition, char board[], bool validMove){
+    //Knights are -17, -15, -10, -6, +6, +10, +15, +17 we don't need to check for it flying pver other pieces
+    int distanceMoved = 0;
+    distanceMoved = abs(endingPosition - startingPosition);
+    if ((distanceMoved == 17) || (distanceMoved == 15) || (distanceMoved == 10) || (distanceMoved == 6)){
+
+    } else {
+        validMove = false;
+    }
+    return validMove;
+}
+
+bool kingMoveCheck(int startingPosition, int endingPosition, char board[], bool validMove){
+    //-9, -8, -7, +9, +8, +7, +1 ,-1
+    int distanceMoved = 0; 
+    distanceMoved = abs(endingPosition - startingPosition);
+    if ((distanceMoved == 9) || (distanceMoved == 8) || (distanceMoved == 7) || (distanceMoved == 1)){
+
+    } else {
+        validMove = false;
+    }
+    //add something to make sure the king can't move into somewhere it'd die
+    return validMove;
 }

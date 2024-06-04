@@ -16,6 +16,9 @@ bool checkIfPossible(int startingPosition, int endingPosition, char piece, char 
 bool blackPieceMoveOnBlackPiece(int endingPosition, char board[]);
 bool whitePieceMoveOnWhitePiece(int endingPosition, char board[]);
 bool horizontalAndVerticalMoveCheck(int startingPosition, int endingPosition, char board[], bool validMove);
+bool diagonalMoveCheck(int startingPosition, int endingPosition, char board[], bool validMove);
+bool horseMoveCheck(int startingPosition, int endingPosition, char board[], bool validMove);
+bool kingMoveCheck(int startingPosition, int endingPosition, char board[], bool validMove);
 
 #endif
 

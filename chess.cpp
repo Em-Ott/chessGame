@@ -5,7 +5,7 @@ What I've learned so far:
 Can use .at(#) or [#] on strings to figure out what's at #
 When using .at(#) or [#] on a string and I am expecting an integer (int var = string.at(#))
 it will return the ASCII value of that integer (interesting)
-
+Plan things out, split up functions
 */
 
 
@@ -41,38 +41,43 @@ int main(){
                 cout << "Black's turn." << endl; 
             }
 
-            cout << "Enter the location of the piece you want to move." << endl;
-            cout << "For example, A2 would move the pawn in the first column, second row." << endl;
+            do {
+                if (!validMove){
+                    cout << "That move was not valid, please try again." << endl;
+                    validMove = true;
+                }
+                cout << "Enter the location of the piece you want to move." << endl;
+                cout << "For example, A2 would move the pawn in the first column, second row." << endl;
 
-            initialPlacement = getUserInputAndConvert(turn, board, gotInitial);
-            gotInitial = true; 
-            pieceMoved = board[initialPlacement];
-            cout << "Where would you like to move this piece to?" << endl;
-            cout << "Enter as A2, E6, F8, etc." << endl;
-            endPlacement = getUserInputAndConvert(turn, board, gotInitial);
+                initialPlacement = getUserInputAndConvert(turn, board, gotInitial);
+                gotInitial = true; 
+                pieceMoved = board[initialPlacement];
+                cout << "Where would you like to move this piece to?" << endl;
+                cout << "Enter as A2, E6, F8, etc." << endl;
+                endPlacement = getUserInputAndConvert(turn, board, gotInitial);
+                validMove = checkIfPossible(initialPlacement, endPlacement, pieceMoved, board);
+
+            } while (!validMove);
             
             
             board[endPlacement] = pieceMoved;
             board[initialPlacement] = '_';
 
             /*
-            After receiving end and initial placement check if possible
-            based on piece. Check for checkmate function, add take pieces function. 
-            And in getUserInputAndConvert do not allow them to move the other
-            pieces places. Add promotion system. Make it so
-            you can't take your own piece.
+            Check for checkmate function
+            Add promotion system. Make it so
+            you can't take your own piece. (white only doesn't work)
             */
-           //do {
-                //validMove = checkIfPossible(initialPlacement, endPlacement, pieceMoved, board);
-           //} while (!validMove);
 
             if (turn){
                 turn = false;
             } else {
                 turn = true;
-            }
-            
+            }    
         } while (gameOngoing);
+
+        cout << "Want to play again? Type 1 for yes and anything else for no." << endl;
+        cin >> gameStart;
     } 
 
 
