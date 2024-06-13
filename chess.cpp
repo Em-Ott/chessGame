@@ -65,8 +65,7 @@ int main(){
 
             /*
             Check for checkmate function
-            Add promotion system. Make it so
-            you can't take your own piece. (white only doesn't work)
+            Add promotion system. 
             */
 
             if (turn){
