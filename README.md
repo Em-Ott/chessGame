@@ -1,12 +1,26 @@
-This is a new project that I will be working on inbetween schoolwork to exercise my C++ knowledge. My goal is to create a chess game that can be played in terminal in C++.<br>
-This is an ongoing project. <br>
-My goals for this chess game involve a few things: <br>
-<li>To create a chess board that will update depending on where pieces are. This involves: <br><br>
+This is a project that I worked on during the school year and briefly over summer to exercise my C++ knowledge. My goal is to create a chess game that can be played in terminal in C++.<br>
+This is an ongoing project. However, I'm nearing the end of it and as such decided to update this readme since the final touches will take a while. <br>
+Going into this I thought chess would be a nice, simple first project in C++. I was very wrong. <br>
+My goals for this chess game involved a few things: <br>
+<li>To create a chess board that will update depending on where pieces are. This involved: <br><br>
 <ol><li>Giving each piece a unique number depending on location then running that through to check where it is.</li><br>
-<li>The most difficult part about this will be optimizing it so there isn't any unnecessary code. </li></ol></li><br>
-<li>To allow user input and check if the user's moves or valid or invalid before letting them make them.</li><br>
-<li>A pawn promotion system, and removal of pieces when they are "dead."</li><br>
-<li>Determining if the board is in checkmate or check and giving a special output with that.</li> <br><br>
+<li>Making sure that the pawn would update what piece it is when it's at the end of it's opponent board. </li></ol></li><br>
+<li>To allow user input, check that it's a valid input (A6, B3, etc...), and check if the user's moves or valid or invalid before letting them make them.</li><br><br>
+<ol><li> The latter was the most time consuming of everything since I had to learn the rules of chess rather than just loosely know them then apply them in code. This includes making specific cases such as if it's a pawn's first move it can move up two spaces. </li><br>
+</ol>
+<li>Determining if the board is in checkmate or check and giving a special output with that, to end the game and get the option to start a new one.</li> <br><br>
 So far I have: <br> <br>
-<li>Found a way to make the chess board and update it. Right now I am trying to find a way to do so with as little redundancy as possible.</li><br>
-<li>Begun figuring out how to check for whether or not a user's move is valid or invalid.</li><br>
+<li>Coded to make the chess board, update the chess board, check the user's move for validity including: is it white or black's turn, are they taking their own piece, and are their pieces' moves within that pieces' moveset, and I added a promotion system to pawns.</li><br>
+What I have left to do: <br> <br>
+<li>I have a couple basic things left to do: adding the en passant move for pawns (which will require me to keep track of the user's latest move) and adding castling for rooks and kings.</li> <br>
+<li>The complicated things I have left that I think will take me a while to do is checking for if the king is in checkmate, and checking with each of the king's moves that the piece is not moving itself into check.</li> <br>
+<li>I can also add an AI to go against. However, once I finish the two points above I am planning to take a break from this project and start something new as I want to start learning how to use a game engine. Since right now I want to stick to mainly one project at a time so that way I don't accidentally end up having 10 unfinished projects, since I am the only thing making me work on these projects. As such, I think it'd be great to come back to this project at a later time and add an AI opponent then. </li> <br><br>
+Now, the important part, what have I learned. This time around I didn't have to learn new code on my own since I was in a CS 121 class which taught C++ and instead I learned more so how to better plan projects and some cool tricks I can use in the future.<br>
+<li>The most important thing I learned was to plan out my project before I do it. I restarted this project four times just to change the way I was holding data.</li><br>
+<ol>At first I put all of my pieces into variables, pawn1, pawn2, etc... But that was a lot of variables. So then I decided to hold it in an array of 64. To which I showed my teacher and he told me that once we learned 2D arrays I would want to use them for this project instead. So I went ahead and learned 2D arrays a bit ahead of schedule and used a array[8][8]. I also tried two separate arrays one for columns[8] and one for rows[8]. To put it simply I could not make up my mind and wasted a ton of time because of that. I ended up doing an array[64] just because I prefered the way you could check pieces in it. That being said any of these array options, and the variable option would also work fine.</ol><br>
+<li>Creating a cheat mode for testing things.</li><br>
+<ol>I only realized how helpful this would be when I was trying to test if my pawns could promote properly and each test was taking around a minute for me to move my pawns all the way up to the other end of the board. In the future I would make something I could enter which would turn off all of the checks I go through when moving pieces so I could teleport my pawn up, turn off the cheats, and then move my pawn forward one and see if it promotes.</ol><br>
+<li>Then there are a few just small C++ things I learned such as:</li><br>
+<ol><li>I can use .at(#) on strings since I learned strings are basically a vector of integers and characters and when I use this it returns the ASCII value. I continued to use ASCII values throughout this whole project in order to check various things, such as if a piece was moving onto a teammate piece.</li><br>
+<li>I also learned that in the future I should use more than 3 files for all of my code (this may obvious but in my class we focused on using a three file format, one for main, one for functions, and one for the header). Instead my functions file ended up very long because that's where the majority of the code is and I could probably split it up into multiple files to make things easier on myself.</li></ol><br>
+Overall, I just need to learn how to plan out my projects better ahead of time and hopefully I'll be able to do that going forward. Although, I think with my next project it may be difficult to do so given I don't know the capabilities of the game engine, GoDot and that project is going to be how I learn GoDot.
