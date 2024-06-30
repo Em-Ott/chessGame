@@ -1,11 +1,10 @@
 #include "chess.h"
 
 /*
-Queen, Bishop, and Rook are all working as intended
-So far horse seems good, hasn't been tested fully yet.
+TO DO:
+Check + Checkmate
+Make it so king can't move into check
 Current problems:
-I can move blank spaces.D
-black pawn can't take?
 implement a feature which stops a king from moving into check
 */
 
@@ -177,7 +176,7 @@ bool checkIfPossible(int startingPosition, int endingPosition, char piece, char 
             && (board[endingPosition] == '_')){
                 //if in starting spot can move 2 forward
             } else if (((startingPosition - 7 == endingPosition) || (startingPosition - 9 == endingPosition)) 
-            && ((board[endingPosition] <= 'z') && (board[endingPosition] != '_'))){
+            && ((board[endingPosition] > 'a') && (board[endingPosition] != '_'))){
                //allows for taking of other pieces using the ASCII value of lowercase (less than uppercase) 
                //and excluding '_' (ASCII value 95)
             } else {
@@ -194,7 +193,7 @@ bool checkIfPossible(int startingPosition, int endingPosition, char piece, char 
             && (board[endingPosition] == '_')){
             
             } else if (((startingPosition + 7 == endingPosition) || (startingPosition + 9 == endingPosition)) 
-            && (board[endingPosition] > 'z')){
+            && (board[endingPosition] < 'a')){
                //allows for taking of other pieces using the ASCII value of lowercase (less than uppercase) 
             } else {
                 validMove = false;
@@ -275,7 +274,7 @@ bool checkIfPossible(int startingPosition, int endingPosition, char piece, char 
 bool blackPieceMoveOnBlackPiece(int endingPosition, char board[]){
     bool validMove = true;
     //black pieces are all lowercase
-    if((board[endingPosition] < 'z') && board[endingPosition] != '_'){
+    if((board[endingPosition] > 'a')){
         validMove = false;
     }
 
@@ -285,7 +284,7 @@ bool blackPieceMoveOnBlackPiece(int endingPosition, char board[]){
 bool whitePieceMoveOnWhitePiece(int endingPosition, char board[]){
     bool validMove = true;
     //white pieces are uppercase (ASCII values higher than z)
-    if(board[endingPosition] > 'z'){
+    if(board[endingPosition] < 'a' && board[endingPosition] != '_'){
         validMove = false;
     }
 
@@ -364,12 +363,14 @@ bool horizontalAndVerticalMoveCheck(int startingPosition, int endingPosition, ch
 bool diagonalMoveCheck(int startingPosition, int endingPosition, char board[], bool validMove){
     //check for multiples of 9s and 7s
     int distanceMoved = 0, nineMovement = 0, sevenMovement = 0;
-    distanceMoved = abs(startingPosition - endingPosition);
+    distanceMoved = abs(startingPosition - endingPosition); 
+    //using absolute value so it's easier to check in for loops
 
     if (distanceMoved == 0){
         validMove = false;
     }
 
+    //then I use this to know which direction to check in
     if(startingPosition > endingPosition){
         sevenMovement = -7;
         nineMovement = -9;
@@ -379,7 +380,7 @@ bool diagonalMoveCheck(int startingPosition, int endingPosition, char board[], b
     }
 
     if (distanceMoved%7 == 0){
-        for(int i = 1; i*7 < distanceMoved; ++i){
+        for(int i = 1; i*7 <= distanceMoved; ++i){
             if (board[startingPosition + i * sevenMovement] == '_'){
                 //space is clear loop continues
             } else {
@@ -390,12 +391,12 @@ bool diagonalMoveCheck(int startingPosition, int endingPosition, char board[], b
             }     
         }
     } else if (distanceMoved%9 == 0) {
-        cout << "divide by 9" << endl;
-        for(int i = 1; i*9 < distanceMoved; ++i){
+
+        for(int i = 1; i*9 <= distanceMoved; ++i){
             if (board[startingPosition + i * nineMovement] == '_'){
                 //space is blank can continue checking
             } else {
-                if (distanceMoved == i * nineMovement){
+                if (distanceMoved == i * abs(nineMovement)){
                     return validMove;
                 }
                 validMove = false;
@@ -431,4 +432,32 @@ bool kingMoveCheck(int startingPosition, int endingPosition, char board[], bool 
     }
     //add something to make sure the king can't move into somewhere it'd die
     return validMove;
+}
+
+char pawnPromotionCheck(char pieceMoved, int endingPosition){
+
+    if (pieceMoved == 'P' && endingPosition < 8){
+        //if your pawn reaches the end of the opponents board
+        cout << "Your white pawn has been promoted!" << endl << 
+        "What would you like to promote it to?" << endl;
+        cin >> pieceMoved;
+        while (pieceMoved != 'Q' && pieceMoved != 'H' && pieceMoved != 'B' && pieceMoved != 'R'){
+            cout << "That is not a piece please enter Q, H, B, or R for Queen, Horse, Bishop, and Rook respectively." << endl;
+            cin.clear();
+            cin.ignore(256, '\n');
+            cin >> pieceMoved;
+        }
+    } else if (pieceMoved == 'p' && endingPosition > 55){
+        cout << "Your black pawn has been promoted!" << endl << 
+        "What would you like to promote it to?" << endl;
+        cin >> pieceMoved;
+        while (pieceMoved != 'q' && pieceMoved != 'h' && pieceMoved != 'b' && pieceMoved != 'r'){
+            cout << "That is not a piece please enter q, h, b, or r for Queen, Horse, Bishop, and Rook respectively." << endl;
+            cin.clear();
+            cin.ignore(256, '\n');
+            cin >> pieceMoved;
+        }
+    }
+
+    return pieceMoved;
 }

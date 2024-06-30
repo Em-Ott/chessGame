@@ -56,10 +56,12 @@ int main(){
                 cout << "Enter as A2, E6, F8, etc." << endl;
                 endPlacement = getUserInputAndConvert(turn, board, gotInitial);
                 validMove = checkIfPossible(initialPlacement, endPlacement, pieceMoved, board);
+                
 
             } while (!validMove);
             
-            
+            //typically this will just set it equal to pieceMoved (itself) unless if it's a promoting pawn
+            pieceMoved = pawnPromotionCheck(pieceMoved, endPlacement);
             board[endPlacement] = pieceMoved;
             board[initialPlacement] = '_';
 

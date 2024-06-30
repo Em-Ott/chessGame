@@ -6,6 +6,11 @@
 #include <string>
 #include <cmath>
 
+/*cmath may seem strange to include but I'm using it mainly for the abs() function, in regards to distance
+a piece may've moved.
+the other two are pretty self explanatory. 
+*/
+
 using namespace std;
 
 void boardInitalization (char board[]);
@@ -19,6 +24,7 @@ bool horizontalAndVerticalMoveCheck(int startingPosition, int endingPosition, ch
 bool diagonalMoveCheck(int startingPosition, int endingPosition, char board[], bool validMove);
 bool horseMoveCheck(int startingPosition, int endingPosition, char board[], bool validMove);
 bool kingMoveCheck(int startingPosition, int endingPosition, char board[], bool validMove);
+char pawnPromotionCheck(char pieceMoved, int endingPosition);
 
 #endif
 
