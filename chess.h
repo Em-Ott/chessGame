@@ -17,7 +17,7 @@ void boardInitalization (char board[]);
 void boardCreation(char board[]);
 int userMoveColumn(string userMove, bool& validMove);
 int getUserInputAndConvert(bool turn, char board[], bool initialInput);
-bool checkIfPossible(int startingPosition, int endingPosition, char piece, char board[]);
+bool checkIfPossible(int startingPosition, int endingPosition, char piece, char board[], int lastMove);
 bool blackPieceMoveOnBlackPiece(int endingPosition, char board[]);
 bool whitePieceMoveOnWhitePiece(int endingPosition, char board[]);
 bool horizontalAndVerticalMoveCheck(int startingPosition, int endingPosition, char board[], bool validMove);
@@ -25,6 +25,10 @@ bool diagonalMoveCheck(int startingPosition, int endingPosition, char board[], b
 bool horseMoveCheck(int startingPosition, int endingPosition, char board[], bool validMove);
 bool kingMoveCheck(int startingPosition, int endingPosition, char board[], bool validMove);
 char pawnPromotionCheck(char pieceMoved, int endingPosition);
+bool enPassant(int startingPosition, int endingPosition, char board[], int lastMove);
+bool castlingCheck();
+bool checkForCheck();
+bool checkForCheckmate();
 
 #endif
 
