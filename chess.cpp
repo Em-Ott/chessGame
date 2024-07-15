@@ -35,14 +35,10 @@ int main(){
     cout << "The pieces are abbreviated as the following: " << endl << "Pawn: p" << endl << 
     "Rook: r" << endl << "Knight/Horse: h" << endl << "Bishop: b" << endl << "Queen: q" << endl <<
     "King: k" << endl << "The white pieces are capital letters and the black pieces are lower case." << endl;
+    cout << "To castle enter your King's location as the starting square and your Rook's location as the ending square." << endl;
     cout << "To begin type 1." << endl;
 
-    /*
-    Q: Why is this std::cin and not cin? You used namespace std in your .h file
-    A: Great question! For some reason cin was underlined in red as ambiguous and although it had no effect
-    on the code (everything ran fine) it was still annoying and doing std::cin cleared that up!
-    */
-    std::cin >> gameStart;
+    cin >> gameStart;
 
     while (gameStart == 1){
         //board initalization, this is the loop for replayability 
@@ -72,7 +68,7 @@ int main(){
                 cout << "Where would you like to move this piece to?" << endl;
                 cout << "Enter as A2, E6, F8, etc." << endl;
                 endPlacement = getUserInputAndConvert(turn, board, gotInitial);
-                validMove = checkIfPossible(initialPlacement, endPlacement, pieceMoved, board, userLastMove);
+                validMove = checkIfPossible(initialPlacement, endPlacement, pieceMoved, board, userLastMove, hasMoved);
                 
 
             } while (!validMove);
@@ -112,12 +108,7 @@ int main(){
 
         cout << "Want to play again? Type 1 for yes and anything else for no." << endl;
 
-        /*
-        Q: Why is this std::cin and not cin? You used namespace std in your .h file
-        A: Great question! For some reason cin was underlined in red as ambiguous and although it had no effect
-        on the code (everything ran fine) it was still annoying and doing std::cin cleared that up!
-        */
-        std::cin >> gameStart;
+        cin >> gameStart;
     } 
 
 

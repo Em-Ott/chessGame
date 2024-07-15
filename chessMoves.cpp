@@ -10,7 +10,7 @@ As well as functions inside of checkIfPossible which I added to try and make it 
 -En Passant
 */
 
-bool checkIfPossible(int startingPosition, int endingPosition, char piece, char board[], int lastMove){
+bool checkIfPossible(int startingPosition, int endingPosition, char piece, char board[], int lastMove, int hasMoved[]){
     bool validMove = true;
 
     switch (piece){
@@ -111,12 +111,12 @@ bool checkIfPossible(int startingPosition, int endingPosition, char piece, char 
 
         case 'K':
         validMove = whitePieceMoveOnWhitePiece(endingPosition, board);
-        validMove = kingMoveCheck(startingPosition, endingPosition, board, validMove);
+        validMove = kingMoveCheck(startingPosition, endingPosition, board, validMove, hasMoved);
         break; 
 
         case 'k':
         validMove = blackPieceMoveOnBlackPiece(endingPosition, board);
-        validMove = kingMoveCheck(startingPosition, endingPosition, board, validMove);
+        validMove = kingMoveCheck(startingPosition, endingPosition, board, validMove, hasMoved);
         break;
     } 
 
@@ -274,15 +274,22 @@ bool horseMoveCheck(int startingPosition, int endingPosition, char board[], bool
     return validMove;
 }
 
-bool kingMoveCheck(int startingPosition, int endingPosition, char board[], bool validMove){
+bool kingMoveCheck(int startingPosition, int endingPosition, char board[], bool validMove, int hasMoved[]){
     //-9, -8, -7, +9, +8, +7, +1 ,-1
     int distanceMoved = 0; 
     distanceMoved = abs(endingPosition - startingPosition);
     if ((distanceMoved == 9) || (distanceMoved == 8) || (distanceMoved == 7) || (distanceMoved == 1)){
 
+    } else if (castlingCheck(startingPosition, endingPosition, board, hasMoved) == true){
+        validMove = true;
+        /*
+        this is set to true as the white on white/black on black will make validMove = false
+        but the pieces aren't actually moving on top of each other when castling so it's ok and can be ignored
+        */
     } else {
         validMove = false;
     }
+    //I could also do validMove by reference and make this a void function but I don't think it matters much
     //add something to make sure the king can't move into somewhere it'd die
     return validMove;
 }
@@ -310,4 +317,78 @@ bool enPassant(int startingPosition, int endingPosition, char board[], int lastM
     }
 
     return valid;
+}
+
+bool castlingCheck(int startingPosition, int endingPosition, char board[], int hasMoved[]){
+    bool valid = false; 
+
+    /*
+    Important things of note:
+    Has Moved:
+    White left rook, white king, white right rook (uppercase pieces) [0-2]
+    Black left rook, black king, black right rook (undercase pieces) [3-5]
+    0 = has not moved yet, 1 = has moved
+    Castling:
+    White (uppercase): from 56 (lb), 60 (k), and 63 (rb) -> 58 (k) + 59 (lb) and 62 (k) + 61 (rb)
+    Black (lowercase): from 0 (lb), 4 (k), and 7 (rb) -> 2 (k) + 3 (lb) and 6 (k) + 5 (rb)
+    Empty spaces inbetween the two moving pieces too.
+    */
+
+   if (startingPosition == 60){
+        if (endingPosition == 56){
+            //I could also use a for loop here to check but I think it's redundant
+            if (board[57] == '_' && board[58] == '_' && board[59] == '_'){
+                if (hasMoved[0] == 0 && hasMoved[1] == 0){
+                    valid = true;
+                    hasMoved[0] = 1;
+                    hasMoved[1] = 1;
+                    board[58] = 'K';
+                    board[59] = 'B';
+                    board[56] = '_';
+                    board[60] = '_';
+                }
+            }
+        } else if (endingPosition == 63){
+            if (board[61] == '_' && board[62] == '_'){
+                if (hasMoved[1] == 0 && hasMoved[2] == 0){
+                    valid = true;
+                    hasMoved[1] = 1;
+                    hasMoved[2] = 1;
+                    board[62] = 'K';
+                    board[61] = 'B';
+                    board[63] = '_';
+                    board[60] = '_';
+                }
+            }
+        }
+   } else if (startingPosition == 4){
+        if (endingPosition == 0){
+            if (board[1] == '_' && board[2] == '_' && board[3] == '_'){
+                if (hasMoved[3] == 0 && hasMoved[4] == 0){
+                    valid = true;
+                    hasMoved[3] = 1;
+                    hasMoved[4] = 1;
+                    board[2] = 'k';
+                    board[3] = 'b';
+                    board[0] = '_';
+                    board[4] = '_';
+                }
+            }
+        } else if (endingPosition == 7){
+            if (board[5] == '_' && board[6] == '_'){
+                if (hasMoved[4] == 0 && hasMoved[5] == 0){
+                    valid = true;
+                    hasMoved[4] = 1;
+                    hasMoved[5] = 1;
+                    board[6] = 'k';
+                    board[5] = 'b';
+                    board[7] = '_';
+                    board[4] = '_';
+                }
+            }
+        }
+   } 
+
+   return valid;
+
 }
