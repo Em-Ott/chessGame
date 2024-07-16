@@ -7,7 +7,9 @@ Includes the main checkIfPossible functions as well as the smaller functions for
 -Diagonal
 As well as functions inside of checkIfPossible which I added to try and make it more organized:
 -Horse Function
--En Passant
+-En Passant + Castling 
+-Check for Check
+-Check for Checkmate
 */
 
 bool checkIfPossible(int startingPosition, int endingPosition, char piece, char board[], int lastMove, int hasMoved[]){
@@ -391,4 +393,79 @@ bool castlingCheck(int startingPosition, int endingPosition, char board[], int h
 
    return valid;
 
+}
+
+bool castlingCheck(int startingPosition, int endingPosition, char board[]){
+    int hasMoved[] = {0,0,0,0,0,0};
+    bool isCastling = false;
+    /*
+    We aren't actually checking for if it's possible for it to castle here 
+    instead we're checking if it is castling
+    so the fourth variable is going to be all true (all 0s)
+    */
+   isCastling = castlingCheck(startingPosition, endingPosition, board, hasMoved);
+
+   return isCastling;
+}
+
+bool checkForCheck(int kingPosition, char board[], int oldMove, int newMove){
+    bool inCheck = false;
+    char futureBoard[64];
+    /*
+    the piece could be technically moving backwards so we need to grab the original piece now 
+    before making our future board otherwise we could end up accidentally making the piece _
+    */
+    char oldPiece = board[oldMove];
+
+    for (int i = 0; i < 64; ++i){
+        if (i == oldMove){
+            //the piece could be technically moving backwards so we need to grab
+            futureBoard[newMove] = oldPiece;
+
+            //the space we are moving from will become empty in everything except castling
+            if (castlingCheck(oldMove, newMove, board)){
+                //this is necessary to change since the rook could block a deadly blow
+                if (board[kingPosition] = 'k'){
+                    futureBoard[oldMove] = 'r';
+                } else {
+                    futureBoard[oldMove] = 'R';
+                }
+            } else {
+                futureBoard[oldMove] = '_';
+            }
+        } else if (i == newMove){
+            //do nothing
+        } else {
+            futureBoard[i] = board[i];
+        }
+    }
+
+    for (int i = 0; i < 64; ++i){
+        if (futureBoard[i] <= '_' && (futureBoard[kingPosition] == 'K')){
+            //ignore because the pieces are on the same team (white)
+        } else if (futureBoard[i] >= '_' && (futureBoard[kingPosition] == 'k')){
+            //ignore because pieces are on the same team (black)
+        } else {
+            if (checkIfPossible(i, kingPosition, futureBoard[i], futureBoard) == true){
+                inCheck = true;
+            }
+        }
+    }
+
+    if (inCheck == true){
+        //checkForCheckmate();
+    }
+
+    return inCheck;
+}
+
+bool checkIfPossible(int startingPosition, int endingPosition, char piece, char board[]){
+    int fakeLastMove = 65;
+    int fakeHasMoved[6] = {2, 2, 2, 2, 2, 2};
+    /*
+    I'm not sure if it'd be more efficient to just put those numbers in my checkForCheck function
+    But I think I may need to do something like this again for checkmate so this will make that easier
+    */
+
+    return checkIfPossible(startingPosition, endingPosition, piece, board, fakeLastMove, fakeHasMoved);
 }

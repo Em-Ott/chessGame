@@ -1,11 +1,10 @@
 #include "chess.h"
 
 /*
+This file has:
+Board initalization, board creation, processing of the user moves, pawn promotion, and finding the king
 TO DO:
-Check + Checkmate
-Make it so king can't move into check
-Current problems:
-implement a feature which stops a king from moving into check
+See main function for to do
 */
 
 void boardInitalization (char board[]){
@@ -188,4 +187,24 @@ char pawnPromotionCheck(char pieceMoved, int endingPosition){
     }
 
     return pieceMoved;
+}
+
+int findKing(char board[], bool turn){
+    int kingLocation = 0; 
+    char king = ' ';
+    
+    if (turn){
+        //white/uppercase
+        king = 'K';
+    } else{
+        king = 'k';
+    }
+    for (int i = 0; i < 64; ++i){
+        if (board[i] == king){
+            kingLocation = i;
+            break;
+        }
+    }
+
+    return kingLocation;
 }

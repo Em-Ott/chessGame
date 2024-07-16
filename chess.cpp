@@ -12,6 +12,16 @@ To run in console: g++ .\chess.cpp .\chessMoves.cpp .\chessFunctions.cpp
 Then .\a.exe
 */
 
+/*
+Current issues:
+when doing Bbishop 2nd move check, Wqueen sacrifice Wbishop + Wking cannot take Bbishop (Whorse can)
+-problem with kings being unable to take what threatens them in check? (received king is in check msg)
+-bishop having broken diagonal movement (received not valid message)
+Current TO DO:
+-fix issues
+-implement checkmate
+*/
+
 
 int main(){
     /*
@@ -20,9 +30,9 @@ int main(){
     and in checking if valid would check row and column
     */
     char board[64], pieceMoved;
-    int gameStart = 0, initialPlacement = 0, endPlacement = 0;
+    int gameStart = 0, initialPlacement = 0, endPlacement = 0, kingPosition = 0;
     int userLastMove = 0; //this is straight up only for en passant 
-    bool validMove = true, gameOngoing = true, turn = true, gotInitial = false;
+    bool validMove = true, gameOngoing = true, turn = true, gotInitial = false, inCheck = false;
     //variable turn: true = white, false = black for which color's turn it is.
     int hasMoved[6] = {0, 0, 0, 0, 0, 0};
     /*
@@ -58,6 +68,10 @@ int main(){
                 if (!validMove){
                     cout << "That move was not valid, please try again." << endl;
                     validMove = true;
+                    if (inCheck){
+                        cout << "You are currently in check, please save your king." << endl;
+                        inCheck = false;
+                    }
                 }
                 cout << "Enter the location of the piece you want to move." << endl;
                 cout << "For example, A2 would move the pawn in the first column, second row." << endl;
@@ -70,6 +84,13 @@ int main(){
                 endPlacement = getUserInputAndConvert(turn, board, gotInitial);
                 validMove = checkIfPossible(initialPlacement, endPlacement, pieceMoved, board, userLastMove, hasMoved);
                 
+                //Determines you are not currently in check and staying in it/moving into check
+                kingPosition = findKing(board, turn);
+                inCheck = checkForCheck(kingPosition, board, initialPlacement, endPlacement);
+
+                if (inCheck){
+                    validMove = false;
+                }
 
             } while (!validMove);
             
@@ -92,9 +113,12 @@ int main(){
             userLastMove = endPlacement;
 
 
-            /*
-            Check for checkmate function
-            */
+            kingPosition = findKing(board, turn);
+            inCheck = checkForCheck(kingPosition, board, initialPlacement, endPlacement);
+
+            if (inCheck){
+                //checkForCheckmate + cout to tell them they are currently in check if not in checkmate
+            }
 
            /*
            if the game is ongoing (not in checkmate) it will return the opposite of whether it is checkmate or not
