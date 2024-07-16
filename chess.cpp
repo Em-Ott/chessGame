@@ -75,8 +75,18 @@ int main(){
             
             //typically this will just set it equal to pieceMoved (itself) unless if it's a promoting pawn
             pieceMoved = pawnPromotionCheck(pieceMoved, endPlacement);
-            board[endPlacement] = pieceMoved;
-            board[initialPlacement] = '_';
+            
+            if (board[initialPlacement] == '_'){
+                /*
+                This is impossible except in the case of castling where I already went in and changed
+                the individual board[square numbers].
+                otherwise initial placement cannot be == to _ because you can't move nothing
+                without this, when the user castles they will gain another king
+                */
+            } else {
+                board[endPlacement] = pieceMoved;
+                board[initialPlacement] = '_';
+            }
 
             //registers last piece moved (this is used to check for en passants) and occurs after move is valid
             userLastMove = endPlacement;
@@ -98,6 +108,7 @@ int main(){
             } else {
                 turn = true;
             }    
+
         } while (gameOngoing);
 
         if(turn == true){

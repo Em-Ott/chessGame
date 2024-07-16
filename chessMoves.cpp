@@ -329,8 +329,8 @@ bool castlingCheck(int startingPosition, int endingPosition, char board[], int h
     Black left rook, black king, black right rook (undercase pieces) [3-5]
     0 = has not moved yet, 1 = has moved
     Castling:
-    White (uppercase): from 56 (lb), 60 (k), and 63 (rb) -> 58 (k) + 59 (lb) and 62 (k) + 61 (rb)
-    Black (lowercase): from 0 (lb), 4 (k), and 7 (rb) -> 2 (k) + 3 (lb) and 6 (k) + 5 (rb)
+    White (uppercase): from 56 (lr), 60 (k), and 63 (rr) -> 58 (k) + 59 (lr) and 62 (k) + 61 (rr)
+    Black (lowercase): from 0 (lr), 4 (k), and 7 (rr) -> 2 (k) + 3 (lr) and 6 (k) + 5 (rr)
     Empty spaces inbetween the two moving pieces too.
     */
 
@@ -343,7 +343,7 @@ bool castlingCheck(int startingPosition, int endingPosition, char board[], int h
                     hasMoved[0] = 1;
                     hasMoved[1] = 1;
                     board[58] = 'K';
-                    board[59] = 'B';
+                    board[59] = 'R';
                     board[56] = '_';
                     board[60] = '_';
                 }
@@ -355,7 +355,7 @@ bool castlingCheck(int startingPosition, int endingPosition, char board[], int h
                     hasMoved[1] = 1;
                     hasMoved[2] = 1;
                     board[62] = 'K';
-                    board[61] = 'B';
+                    board[61] = 'R';
                     board[63] = '_';
                     board[60] = '_';
                 }
@@ -369,7 +369,7 @@ bool castlingCheck(int startingPosition, int endingPosition, char board[], int h
                     hasMoved[3] = 1;
                     hasMoved[4] = 1;
                     board[2] = 'k';
-                    board[3] = 'b';
+                    board[3] = 'r';
                     board[0] = '_';
                     board[4] = '_';
                 }
@@ -381,7 +381,7 @@ bool castlingCheck(int startingPosition, int endingPosition, char board[], int h
                     hasMoved[4] = 1;
                     hasMoved[5] = 1;
                     board[6] = 'k';
-                    board[5] = 'b';
+                    board[5] = 'r';
                     board[7] = '_';
                     board[4] = '_';
                 }
