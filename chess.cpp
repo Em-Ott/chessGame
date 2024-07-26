@@ -15,8 +15,8 @@ Then .\a.exe
 /*
 Current issues:
 when doing Bbishop 2nd move check, Wqueen sacrifice Wbishop + Wking cannot take Bbishop (Whorse can)
--problem with kings being unable to take what threatens them in check? (received king is in check msg)
--bishop having broken diagonal movement (received not valid message)
+-bishop having broken diagonal movement (received not valid message)? couldn't replicate issue but keep an eye out for it
+-Problems with moving king? Not sure, keep watching
 Current TO DO:
 -fix issues
 -implement checkmate
@@ -69,7 +69,7 @@ int main(){
                     cout << "That move was not valid, please try again." << endl;
                     validMove = true;
                     if (inCheck){
-                        cout << "You are currently in check, please save your king." << endl;
+                        cout << "You are currently in check or moving into check, please save your king." << endl;
                         inCheck = false;
                     }
                 }

@@ -411,11 +411,19 @@ bool castlingCheck(int startingPosition, int endingPosition, char board[]){
 bool checkForCheck(int kingPosition, char board[], int oldMove, int newMove){
     bool inCheck = false;
     char futureBoard[64];
+    int kingPositionPreMove = kingPosition; 
+    //this is to plug into the checkforcheckmate function as king can't double move
     /*
     the piece could be technically moving backwards so we need to grab the original piece now 
     before making our future board otherwise we could end up accidentally making the piece _
     */
     char oldPiece = board[oldMove];
+
+    if (oldPiece == 'k' || oldPiece == 'K'){
+        /*this should allow my king to be able to move and take pieces while being in check 
+        so long as he remains out of check after having taken the piece*/
+        kingPosition = newMove;
+    }
 
     for (int i = 0; i < 64; ++i){
         if (i == oldMove){
@@ -468,4 +476,41 @@ bool checkIfPossible(int startingPosition, int endingPosition, char piece, char 
     */
 
     return checkIfPossible(startingPosition, endingPosition, piece, board, fakeLastMove, fakeHasMoved);
+}
+
+bool checkForCheckmate(int kingPosition, char board[], int oldMove, int newMove){
+    //this would have to check for each possible place the king can move, can it be killed?
+    //the below array corresponds to upleft diagonal move, up move, upright diagonal move, and so forth
+    int possibleKingPosition[8] = {kingPosition - 9, kingPosition - 8, kingPosition - 7, 
+                                    kingPosition - 1, kingPosition + 1,
+                                    kingPosition + 7, kingPosition + 8, kingPosition + 9};
+    bool inCheckmate = false;
+
+    for (int i = 0; i < 8; ++i){
+        
+    }
+    
+
+    
+
+
+}
+
+bool checkForCheckCheckmate(int kingPosition, char board[]){
+    //note we're using futureboard here not the current one, aside from kingPosition which will be old kingPos
+    bool inCheck = false;
+
+    for (int i = 0; i < 64; ++i){
+        if (board[i] <= '_' && (board[kingPosition] == 'K')){
+            //ignore because the pieces are on the same team (white)
+        } else if (board[i] >= '_' && (board[kingPosition] == 'k')){
+            //ignore because pieces are on the same team (black)
+        } else {
+            if (checkIfPossible(i, kingPosition, board[i], board) == true){
+                inCheck = true;
+            }
+        }
+    }
+
+    return inCheck;
 }
