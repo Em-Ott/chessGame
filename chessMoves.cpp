@@ -408,8 +408,8 @@ bool castlingCheck(int startingPosition, int endingPosition, char board[]){
    return isCastling;
 }
 
-bool checkForCheck(int kingPosition, char board[], int oldMove, int newMove){
-    bool inCheck = false;
+int checkForCheck(int kingPosition, char board[], int oldMove, int newMove){
+    int inCheck = 0;
     char futureBoard[64];
     int kingPositionPreMove = kingPosition; 
     //this is to plug into the checkforcheckmate function as king can't double move
@@ -455,15 +455,18 @@ bool checkForCheck(int kingPosition, char board[], int oldMove, int newMove){
             //ignore because pieces are on the same team (black)
         } else {
             if (checkIfPossible(i, kingPosition, futureBoard[i], futureBoard) == true){
-                inCheck = true;
+                inCheck = 1;
             }
         }
     }
 
     if (inCheck == true){
-        //checkForCheckmate();
+        if (checkForCheckmate(kingPositionPreMove, futureBoard) == true){
+            inCheck = 2;
+        }
     }
 
+    //three possible answers: 0 (not in check), 1 (in check), 2 (in checkmate)
     return inCheck;
 }
 
@@ -478,22 +481,29 @@ bool checkIfPossible(int startingPosition, int endingPosition, char piece, char 
     return checkIfPossible(startingPosition, endingPosition, piece, board, fakeLastMove, fakeHasMoved);
 }
 
-bool checkForCheckmate(int kingPosition, char board[], int oldMove, int newMove){
+bool checkForCheckmate(int kingPosition, char board[]){
     //this would have to check for each possible place the king can move, can it be killed?
     //the below array corresponds to upleft diagonal move, up move, upright diagonal move, and so forth
-    int possibleKingPosition[8] = {kingPosition - 9, kingPosition - 8, kingPosition - 7, 
-                                    kingPosition - 1, kingPosition + 1,
+    int possibleKingPosition[9] = {kingPosition - 9, kingPosition - 8, kingPosition - 7, 
+                                    kingPosition - 1, kingPosition, kingPosition + 1,
                                     kingPosition + 7, kingPosition + 8, kingPosition + 9};
     bool inCheckmate = false;
+    int inCheck[9] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-    for (int i = 0; i < 8; ++i){
-        
+    //we unfortunately need to check also for where it is, rather than assuming it's currently in check
+    //because the piece could be moving into check which would still trigger this function
+    for (int i = 0; i < 9; ++i){
+        if (checkForCheckCheckmate(possibleKingPosition[i], board) == true){
+            inCheck[i] = 1;
+        }
+        if (inCheck[i] != 1){
+            break;
+        } else if (inCheck[8] == 1){
+            inCheckmate = true;
+        }
     }
-    
 
-    
-
-
+    return inCheckmate; 
 }
 
 bool checkForCheckCheckmate(int kingPosition, char board[]){

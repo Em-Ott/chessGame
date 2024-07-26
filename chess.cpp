@@ -18,8 +18,9 @@ when doing Bbishop 2nd move check, Wqueen sacrifice Wbishop + Wking cannot take 
 -bishop having broken diagonal movement (received not valid message)? couldn't replicate issue but keep an eye out for it
 -Problems with moving king? Not sure, keep watching
 Current TO DO:
--fix issues
--implement checkmate
+-fix issues if there are any
+-test checkmate (WE'RE MAKING ITTTT)
+-add replay by making another loop 
 */
 
 
@@ -30,9 +31,9 @@ int main(){
     and in checking if valid would check row and column
     */
     char board[64], pieceMoved;
-    int gameStart = 0, initialPlacement = 0, endPlacement = 0, kingPosition = 0;
+    int gameStart = 0, initialPlacement = 0, endPlacement = 0, kingPosition = 0, inCheck = 0;
     int userLastMove = 0; //this is straight up only for en passant 
-    bool validMove = true, gameOngoing = true, turn = true, gotInitial = false, inCheck = false;
+    bool validMove = true, gameOngoing = true, turn = true, gotInitial = false;
     //variable turn: true = white, false = black for which color's turn it is.
     int hasMoved[6] = {0, 0, 0, 0, 0, 0};
     /*
@@ -68,9 +69,9 @@ int main(){
                 if (!validMove){
                     cout << "That move was not valid, please try again." << endl;
                     validMove = true;
-                    if (inCheck){
+                    if (inCheck == 1){
                         cout << "You are currently in check or moving into check, please save your king." << endl;
-                        inCheck = false;
+                        inCheck = 0;
                     }
                 }
                 cout << "Enter the location of the piece you want to move." << endl;
@@ -88,7 +89,7 @@ int main(){
                 kingPosition = findKing(board, turn);
                 inCheck = checkForCheck(kingPosition, board, initialPlacement, endPlacement);
 
-                if (inCheck){
+                if (inCheck == 1){
                     validMove = false;
                 }
 
@@ -116,8 +117,9 @@ int main(){
             kingPosition = findKing(board, turn);
             inCheck = checkForCheck(kingPosition, board, initialPlacement, endPlacement);
 
-            if (inCheck){
-                //checkForCheckmate + cout to tell them they are currently in check if not in checkmate
+            if (inCheck == 2){
+                cout << "You are in checkmate! The game is over!" << endl;
+                gameStart = 0;
             }
 
            /*

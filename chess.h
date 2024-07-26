@@ -31,8 +31,8 @@ bool enPassant(int startingPosition, int endingPosition, char board[], int lastM
 bool castlingCheck(int startingPosition, int endingPosition, char board[], int hasMoved[]);
 bool castlingCheck(int startingPosition, int endingPosition, char board[]);
 int findKing(char board[], bool turn);
-bool checkForCheck(int kingPosition, char board[], int oldMove, int newMove);
-bool checkForCheckmate();
+int checkForCheck(int kingPosition, char board[], int oldMove, int newMove);
+bool checkForCheckmate(int kingPosition, char board[]);
 bool checkForCheckCheckmate(int kingPosition, char board[]);
 
 #endif
