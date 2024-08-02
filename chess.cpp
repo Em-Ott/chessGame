@@ -13,35 +13,12 @@ Then .\a.exe
 */
 
 /*
-Current issues:
-when doing Bbishop 2nd move check, Wqueen sacrifice Wbishop + Wking cannot take Bbishop (Whorse can)
--bishop having broken diagonal movement (received not valid message)? couldn't replicate issue but keep an eye out for it
--Problems with moving king? Not sure, keep watching
-Current TO DO:
--fix issues if there are any
--test checkmate (WE'RE MAKING ITTTT)
--add replay by making another loop 
+I declare most variables in the first game loop, since if a new game is started
+many of the variables need to be reset and resetting them this way is easier than doing them 
+all individually.
 */
-
-
 int main(){
-    /*
-    could also do a multidimensional array [8][8]
-    it would mainly just change the way the board is created (double loop)
-    and in checking if valid would check row and column
-    */
-    char board[64], pieceMoved;
-    int gameStart = 0, initialPlacement = 0, endPlacement = 0, kingPosition = 0, inCheck = 0;
-    int userLastMove = 0; //this is straight up only for en passant 
-    bool validMove = true, gameOngoing = true, turn = true, gotInitial = false;
-    //variable turn: true = white, false = black for which color's turn it is.
-    int hasMoved[6] = {0, 0, 0, 0, 0, 0};
-    /*
-    This is to check if a piece necessary for castling has moved yet (as castling has to be a pieces' first move if done)
-    They stand for the pieces as follows:
-    White left rook, white king, white right rook (uppercase pieces)
-    Black left rook, black king, black right rook (undercase pieces)
-    */
+    int gameStart = 0;
 
     cout << "The pieces are abbreviated as the following: " << endl << "Pawn: p" << endl << 
     "Rook: r" << endl << "Knight/Horse: h" << endl << "Bishop: b" << endl << "Queen: q" << endl <<
@@ -51,7 +28,24 @@ int main(){
 
     cin >> gameStart;
 
-    while (gameStart == 1){
+    do {
+        /*
+        could also do a multidimensional array [8][8]
+        it would mainly just change the way the board is created (double loop)
+        and in checking if valid would check row and column
+        */
+        char board[64], pieceMoved;
+        int initialPlacement = 0, endPlacement = 0, kingPosition = 0, inCheck = 0;
+        int userLastMove = 0; //this is straight up only for en passant 
+        bool validMove = true, gameOngoing = true, turn = true, gotInitial = false;
+        //variable turn: true = white, false = black for which color's turn it is.
+        int hasMoved[6] = {0, 0, 0, 0, 0, 0};
+        /*
+        This is to check if a piece necessary for castling has moved yet (as castling has to be a pieces' first move if done)
+        They stand for the pieces as follows:
+        White left rook, white king, white right rook (uppercase pieces)
+        Black left rook, black king, black right rook (undercase pieces)
+        */
         //board initalization, this is the loop for replayability 
         boardInitalization (board);
         do {
@@ -91,6 +85,13 @@ int main(){
 
                 if (inCheck == 1){
                     validMove = false;
+                } else if (inCheck == 2){
+                    /*
+                    I recognize that sometimes pieces may be able to intersect and interrupt the path to the king
+                    And I know this may result in an inCheck == 2 and the game may be able to be continued
+                    However, as things stand I don't want to check that in this version see the ReadMe for more info
+                    */
+                    gameOngoing = false;
                 }
 
             } while (!validMove);
@@ -113,27 +114,19 @@ int main(){
             //registers last piece moved (this is used to check for en passants) and occurs after move is valid
             userLastMove = endPlacement;
 
-
-            kingPosition = findKing(board, turn);
-            inCheck = checkForCheck(kingPosition, board, initialPlacement, endPlacement);
-
-            if (inCheck == 2){
-                cout << "You are in checkmate! The game is over!" << endl;
-                gameStart = 0;
-            }
-
-           /*
-           if the game is ongoing (not in checkmate) it will return the opposite of whether it is checkmate or not
-            so if it's true (in checkmate) the gameOngoing will be false and the game will be exited
-           */
-
-           //gameOngoing = !(checkForCheckmate);
-
             if (turn){
+                //if white become black
                 turn = false;
             } else {
                 turn = true;
             }    
+
+            kingPosition = findKing(board, turn);
+            inCheck = checkForCheck(kingPosition, board);
+
+            if (inCheck == 1 || inCheck == 2){
+                cout << "You are in check! You have one chance to save your king!" << endl;
+            } 
 
         } while (gameOngoing);
 
@@ -146,7 +139,8 @@ int main(){
         cout << "Want to play again? Type 1 for yes and anything else for no." << endl;
 
         cin >> gameStart;
-    } 
+
+    } while (gameStart == 1);
 
 
 

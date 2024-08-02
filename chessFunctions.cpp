@@ -3,8 +3,6 @@
 /*
 This file has:
 Board initalization, board creation, processing of the user moves, pawn promotion, and finding the king
-TO DO:
-See main function for to do
 */
 
 void boardInitalization (char board[]){

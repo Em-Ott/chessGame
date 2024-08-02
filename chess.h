@@ -32,6 +32,7 @@ bool castlingCheck(int startingPosition, int endingPosition, char board[], int h
 bool castlingCheck(int startingPosition, int endingPosition, char board[]);
 int findKing(char board[], bool turn);
 int checkForCheck(int kingPosition, char board[], int oldMove, int newMove);
+int checkForCheck(int kingPosition, char board[]);
 bool checkForCheckmate(int kingPosition, char board[]);
 bool checkForCheckCheckmate(int kingPosition, char board[]);
 

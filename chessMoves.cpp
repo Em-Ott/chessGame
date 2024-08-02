@@ -217,7 +217,7 @@ bool horizontalAndVerticalMoveCheck(int startingPosition, int endingPosition, ch
 
 bool diagonalMoveCheck(int startingPosition, int endingPosition, char board[], bool validMove){
     //check for multiples of 9s and 7s
-    int distanceMoved = 0, nineMovement = 0, sevenMovement = 0;
+    int distanceMoved = 0, sevenMovement = 0, nineMovement = 0;
     distanceMoved = abs(startingPosition - endingPosition); 
     //using absolute value so it's easier to check in for loops
 
@@ -225,7 +225,6 @@ bool diagonalMoveCheck(int startingPosition, int endingPosition, char board[], b
         validMove = false;
     }
 
-    //then I use this to know which direction to check in
     if(startingPosition > endingPosition){
         sevenMovement = -7;
         nineMovement = -9;
@@ -239,19 +238,18 @@ bool diagonalMoveCheck(int startingPosition, int endingPosition, char board[], b
             if (board[startingPosition + i * sevenMovement] == '_'){
                 //space is clear loop continues
             } else {
-                if (distanceMoved == i * sevenMovement){
+                if (distanceMoved == i * 7){
                     return validMove;
                 }
                 validMove = false;
             }     
         }
     } else if (distanceMoved%9 == 0) {
-
         for(int i = 1; i*9 <= distanceMoved; ++i){
             if (board[startingPosition + i * nineMovement] == '_'){
                 //space is blank can continue checking
             } else {
-                if (distanceMoved == i * abs(nineMovement)){
+                if (distanceMoved == i * 9){  
                     return validMove;
                 }
                 validMove = false;
@@ -454,13 +452,14 @@ int checkForCheck(int kingPosition, char board[], int oldMove, int newMove){
         } else if (futureBoard[i] >= '_' && (futureBoard[kingPosition] == 'k')){
             //ignore because pieces are on the same team (black)
         } else {
-            if (checkIfPossible(i, kingPosition, futureBoard[i], futureBoard) == true){
+            if (checkIfPossible(i, kingPosition, futureBoard[i], futureBoard) == 1){
+                //this is not working for some reason
                 inCheck = 1;
             }
         }
     }
 
-    if (inCheck == true){
+    if (inCheck == 1){
         if (checkForCheckmate(kingPositionPreMove, futureBoard) == true){
             inCheck = 2;
         }
@@ -519,6 +518,29 @@ bool checkForCheckCheckmate(int kingPosition, char board[]){
             if (checkIfPossible(i, kingPosition, board[i], board) == true){
                 inCheck = true;
             }
+        }
+    }
+
+    return inCheck;
+}
+
+int checkForCheck(int kingPosition, char board[]){
+    int inCheck = 0;
+    for (int i = 0; i < 64; ++i){
+        if (board[i] <= '_' && (board[kingPosition] == 'K')){
+            //ignore because the pieces are on the same team (white)
+        } else if (board[i] >= '_' && (board[kingPosition] == 'k')){
+            //ignore because pieces are on the same team (black)
+        } else {
+            if (checkIfPossible(i, kingPosition, board[i], board) == 1){
+                inCheck = 1;
+            }
+        }
+    }
+
+    if (inCheck == 1){
+        if (checkForCheckmate(kingPosition, board) == true){
+            inCheck = 2;
         }
     }
 
