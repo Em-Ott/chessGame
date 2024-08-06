@@ -1,5 +1,5 @@
 This is a project that I worked on during the school year and briefly over summer to exercise my C++ knowledge. My goal is to create a chess game that can be played in terminal in C++.<br>
-This is an ongoing project. However, I'm nearing the end of it and as such decided to update this readme since the final touches will take a while. <br>
+This is project is finished but may be revisited at a later date for future additions. <br>
 Going into this I thought chess would be a nice, simple first project in C++. I was very wrong. <br>
 My goals for this chess game involved a few things: <br>
 <li>To create a chess board that will update depending on where pieces are. This involved: <br><br>
